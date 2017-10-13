@@ -19,10 +19,10 @@ composer require filippo-toso/viaggia-treno
 ## Using It
 
 ```
-use FilippoToso\ViaggiaTrenoAPI\Client as Client;
+use FilippoToso\ViaggiaTrenoAPI\Client as ViaggiaTreno;
 
 // Create the client
-$client = new Client();
+$client = new ViaggiaTreno();
 
 // Get the starting station and other details
 $results = $client->cercaNumeroTrenoTrenoAutocomplete('8526');
