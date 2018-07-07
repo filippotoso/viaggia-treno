@@ -102,7 +102,7 @@ class Client
 
         try {
             $res = $client->request('POST', $url, [
-                'json' => $data,
+                'form_params' => $data,
                 'headers' => [
                     'User-Agent' => 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0',
                 ],
@@ -112,7 +112,7 @@ class Client
             return FALSE;
         }
 
-        return (string)$res->getBody();
+        return (string) $res->getBody();
 
     }
 
@@ -123,8 +123,8 @@ class Client
      * @return String      The result API url
      */
     protected function getUrl($path) {
-        return sprintf('http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/%s', $path);
-
+        // Old URL: 'http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/%s
+        return sprintf('http://www.viaggiatreno.it/viaggiatrenomobile/resteasy/viaggiatreno/%s', $path);
     }
 
     /**
