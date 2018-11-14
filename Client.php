@@ -123,8 +123,7 @@ class Client
      * @return String      The result API url
      */
     protected function getUrl($path) {
-        // Old URL: 'http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/%s
-        return sprintf('http://www.viaggiatreno.it/viaggiatrenomobile/resteasy/viaggiatreno/%s', $path);
+        return sprintf('http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/%s', $path);
     }
 
     /**
@@ -134,6 +133,7 @@ class Client
      * @return Array   Array with train, station and station code
      */
     public function cercaNumeroTrenoTrenoAutocomplete($number) {
+
         $url = $this->getUrl(sprintf('cercaNumeroTrenoTrenoAutocomplete/%s', urlencode($number)));
         $content = $this->get($url);
 
@@ -145,6 +145,35 @@ class Client
                 'station' => $matches[2],
                 'station_code' => $matches[4],
             ];
+        }
+
+        return $data;
+
+    }
+
+    /**
+     * Autocomplete station name and code
+     * @method cercaNumeroTrenoTrenoAutocomplete
+     * @param  String  $station The partial name of the station
+     * @return Array   Array station and station code
+     */
+    public function autocompletaStazione($station) {
+
+        $url = $this->getUrl(sprintf('autocompletaStazione/%s', rawurlencode($station)));
+        $content = $this->get($url);
+
+        $rows = explode("\n", trim($content));
+
+        $data = FALSE;
+
+        $pattern = '#([^\|]*)\|([^\s]+)#si';
+        foreach ($rows as $row) {
+            if (preg_match($pattern, $row, $matches)) {
+                $data[] = [
+                    'station' => trim($matches[1]),
+                    'station_code' => trim($matches[2]),
+                ];
+            }
         }
 
         return $data;
