@@ -243,7 +243,7 @@ class Client
      * @param  String|DateTime|Carbon  $time     The time of departure
      * @return Array                   The train stops details
      */
-    public function partenze($station, $time)
+    public function arrivi($station, $time)
     {
 
         if (is_string($time)) {
@@ -255,7 +255,7 @@ class Client
         }
 
         // DON'T encode the date, otherwise it will not work (don't ask me why)!
-        $url = $this->getUrl(sprintf('arrovo/%s/%s', urlencode($station), $time->format('D M d Y H:i:s \G\M\TO')));
+        $url = $this->getUrl(sprintf('arrivi/%s/%s', urlencode($station), $time->format('D M d Y H:i:s \G\M\TO')));
         $data = $this->getJSON($url);
         return $data;
 
