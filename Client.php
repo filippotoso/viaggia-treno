@@ -14,23 +14,23 @@ class Client
      * @param  String $url The url of the API endpoint
      * @return Array|FALSE  The result of the request
      */
-    protected function getJSON($url) {
+    protected function getJSON($url)
+    {
 
         $client = new HTTPClient();
 
         try {
             $res = $client->request('GET', $url, [
                 'headers' => [
-                    'Accept'     => 'application/json',
+                    'Accept' => 'application/json',
                     'User-Agent' => 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0',
                 ],
             ]);
-        }
-        catch (BadResponseException $e) {
-            return FALSE;
+        } catch (BadResponseException $e) {
+            return false;
         }
 
-        $data = json_decode($res->getBody(), TRUE);
+        $data = json_decode($res->getBody(), true);
 
         return $data;
 
@@ -41,7 +41,8 @@ class Client
      * @param  String $url The url of the API endpoint
      * @return Array|FALSE  The result of the request
      */
-    protected function get($url) {
+    protected function get($url)
+    {
 
         $client = new HTTPClient();
 
@@ -51,9 +52,8 @@ class Client
                     'User-Agent' => 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0',
                 ],
             ]);
-        }
-        catch (BadResponseException $e) {
-            return FALSE;
+        } catch (BadResponseException $e) {
+            return false;
         }
 
         return (string)$res->getBody();
@@ -67,7 +67,8 @@ class Client
      * @param  Array $data The parameters of the request
      * @return Array|FALSE  The result of the request
      */
-    protected function postJSON($url, $data) {
+    protected function postJSON($url, $data)
+    {
 
         $client = new HTTPClient();
 
@@ -75,16 +76,15 @@ class Client
             $res = $client->request('POST', $url, [
                 'json' => $data,
                 'headers' => [
-                    'Accept'     => 'application/json',
+                    'Accept' => 'application/json',
                     'User-Agent' => 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0',
                 ],
             ]);
-        }
-        catch (BadResponseException $e) {
-            return FALSE;
+        } catch (BadResponseException $e) {
+            return false;
         }
 
-        $data = json_decode($res->getBody(), TRUE);
+        $data = json_decode($res->getBody(), true);
 
         return $data;
 
@@ -96,7 +96,8 @@ class Client
      * @param  Array $data The parameters of the request
      * @return Array|FALSE  The result of the request
      */
-    protected function post($url, $data) {
+    protected function post($url, $data)
+    {
 
         $client = new HTTPClient();
 
@@ -107,12 +108,11 @@ class Client
                     'User-Agent' => 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0',
                 ],
             ]);
-        }
-        catch (BadResponseException $e) {
-            return FALSE;
+        } catch (BadResponseException $e) {
+            return false;
         }
 
-        return (string) $res->getBody();
+        return (string)$res->getBody();
 
     }
 
@@ -122,7 +122,8 @@ class Client
      * @param  String $path The api call path
      * @return String      The result API url
      */
-    protected function getUrl($path) {
+    protected function getUrl($path)
+    {
         return sprintf('http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/%s', $path);
     }
 
@@ -132,12 +133,13 @@ class Client
      * @param  String  $number The number of the train or station
      * @return Array   Array with train, station and station code
      */
-    public function cercaNumeroTrenoTrenoAutocomplete($number) {
+    public function cercaNumeroTrenoTrenoAutocomplete($number)
+    {
 
         $url = $this->getUrl(sprintf('cercaNumeroTrenoTrenoAutocomplete/%s', urlencode($number)));
         $content = $this->get($url);
 
-        $data = FALSE;
+        $data = false;
         $pattern = '#(\d+)\s*-\s*([^\|]+)\|(\d+)-([^\s]+)#si';
         if (preg_match($pattern, $content, $matches)) {
             $data = [
@@ -157,14 +159,15 @@ class Client
      * @param  String  $station The partial name of the station
      * @return Array   Array station and station code
      */
-    public function autocompletaStazione($station) {
+    public function autocompletaStazione($station)
+    {
 
         $url = $this->getUrl(sprintf('autocompletaStazione/%s', rawurlencode($station)));
         $content = $this->get($url);
 
         $rows = explode("\n", trim($content));
 
-        $data = FALSE;
+        $data = false;
 
         $pattern = '#([^\|]*)\|([^\s]+)#si';
         foreach ($rows as $row) {
@@ -187,7 +190,8 @@ class Client
      * @param  String         $train   The train code
      * @return Array                   The train status
      */
-    public function andamentoTreno($station, $train) {
+    public function andamentoTreno($station, $train)
+    {
         $url = $this->getUrl(sprintf('andamentoTreno/%s/%s', urlencode($station), urlencode($train)));
         $data = $this->getJSON($url);
         return $data;
@@ -200,7 +204,8 @@ class Client
      * @param  String         $train   The train code
      * @return Array                   The train stops details
      */
-    public function tratteCanvas($station, $train) {
+    public function tratteCanvas($station, $train)
+    {
         $url = $this->getUrl(sprintf('tratteCanvas/%s/%s', urlencode($station), urlencode($train)));
         $data = $this->getJSON($url);
         return $data;
@@ -213,7 +218,8 @@ class Client
      * @param  String|DateTime|Carbon  $time     The time of departure
      * @return Array                   The train stops details
      */
-    public function partenze($station, $time) {
+    public function partenze($station, $time)
+    {
 
         if (is_string($time)) {
             $time = Carbon::parse($time);
@@ -224,7 +230,32 @@ class Client
         }
 
         // DON'T encode the date, otherwise it will not work (don't ask me why)!
-        $url = $this->getUrl(sprintf('partenze/%s/%s', urlencode($station), $time->format('D M j Y H:i:s \G\M\TO')));
+        $url = $this->getUrl(sprintf('partenze/%s/%s', urlencode($station), $time->format('D M d Y H:i:s \G\M\TO')));
+        $data = $this->getJSON($url);
+        return $data;
+
+    }
+
+    /**
+     * Get the train arrivals from the provided station details
+     * @method partenze
+     * @param  String                  $station  The station for which get the departures
+     * @param  String|DateTime|Carbon  $time     The time of departure
+     * @return Array                   The train stops details
+     */
+    public function partenze($station, $time)
+    {
+
+        if (is_string($time)) {
+            $time = Carbon::parse($time);
+        } elseif (is_a($time, DateTime::class)) {
+            $time = Carbon::instance($time);
+        } elseif (!is_a($time, Carbon::class)) {
+            throw new Exception('Invalid time.');
+        }
+
+        // DON'T encode the date, otherwise it will not work (don't ask me why)!
+        $url = $this->getUrl(sprintf('arrovo/%s/%s', urlencode($station), $time->format('D M d Y H:i:s \G\M\TO')));
         $data = $this->getJSON($url);
         return $data;
 
