@@ -261,4 +261,32 @@ class Client
 
     }
 
+    public function elencoTratte(array $types = ['ES*', 'IC', 'EXP', 'EC', 'EN'], $time = null)
+    {
+        $types = $this->validTrainTypes($types);
+        $types = implode(',', $types);
+        $time = $time ? $time : time();
+
+        $url = $this->getUrl(sprintf('elencoTratte/0/6/%s/null/%s', urlencode($types), $time * 1000));
+        $data = $this->getJSON($url);
+        return $data;
+    }
+
+    public function dettagliTratta(string $section, array $types = ['ES*', 'IC', 'EXP', 'EC', 'EN'])
+    {
+        $types = $this->validTrainTypes($types);
+        $types = implode(',', $types);
+
+        $url = $this->getUrl(sprintf('dettagliTratta/0/8/%s/%s/null', urlencode($section), urlencode($types)));
+        $data = $this->getJSON($url);
+        return $data;
+
+    }
+
+    protected function validTrainTypes(array $types = ['ES*', 'IC', 'EXP', 'EC', 'EN'])
+    {
+        $validTypes = ['ES*', 'IC', 'EXP', 'EC', 'EN'];
+        return array_intersect($validTypes, $types);
+    }
+
 }
