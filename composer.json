@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": "^5.6 || ^7.0 || ^8.0",
-        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/guzzle": "^6.2 || ^7.0.1",
         "nesbot/carbon": "^1.26.3 || ^2.0"
     },
     "autoload": {
